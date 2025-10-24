@@ -71,7 +71,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 // Function to call Gemini API
 async function getGeminiResponse(text) {
    // replace with your real key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
 
   const payload = {
     contents: [
