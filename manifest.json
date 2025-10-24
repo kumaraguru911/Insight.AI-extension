@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Insight.AI - Smart Research Companion",
+  "version": "1.0",
+  "description": "Summarize, explain, and translate selected text instantly using Gemini APIs.",
+  "icons": {
+    "48": "icons/icon48.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Insight.AI"
+  }
+}

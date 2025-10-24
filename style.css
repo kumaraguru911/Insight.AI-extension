@@ -1,0 +1,57 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 250px;
+  background: #f8fafc;
+  color: #111;
+}
+
+#popup-container {
+  padding: 15px;
+}
+
+h2 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+}
+
+.tagline {
+  color: #555;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.settings {
+  margin: 10px 0;
+}
+
+select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+#statusMsg {
+  text-align: center;
+  font-size: 12px;
+  color: #22c55e;
+  margin-top: 8px;
+}
