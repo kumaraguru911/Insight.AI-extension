@@ -82,7 +82,7 @@
   background-size: 44px 44px;
   background-position: center -11px; /* Crop to show only the brain icon */
   background-repeat: no-repeat;
-  background-image: url('chrome-extension://__MSG_@@extension_id__/icons/icon48.png');
+  background-image: url('chrome-extension://__MSG_@@extension_id__/icons/icon48.png'); /* Ensure logo is set */
 }
 
 .ai-popup-title {
@@ -121,7 +121,7 @@
   content: '▋';
   animation: ai-popup-blink 1s step-end infinite;
   margin-left: 2px;
-  color: var(--clarity-accent);
+  color: var(--clarity-accent); /* Use clarity accent for typing cursor */
   font-weight: 600;
 }
 

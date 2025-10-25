@@ -1,9 +1,12 @@
+const HISTORY_STORAGE_KEY = 'aiResponseHistory'; // Define a constant for the history storage key
+const MAX_HISTORY_ENTRIES = 50; // Limit history to prevent excessive storage
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-  id: "askAI_explain",
-  title: "AI: Explain selected text",
-  contexts: ["selection"]
-});
+    id: "askAI_explain",
+    title: "AI: Explain selected text",
+    contexts: ["selection"]
+  });
 
 chrome.contextMenus.create({
   id: "askAI_summarize",
@@ -17,9 +20,22 @@ chrome.contextMenus.create({
   contexts: ["selection"]
 });
 
+  // New context menu item for history
+  chrome.contextMenus.create({
+    id: "showAIHistory",
+    title: "Show AI History",
+    contexts: ["all"] // Can be clicked anywhere
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "showAIHistory") {
+    // Inject history sidebar
+    chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ["history.css"] });
+    chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["history_content_script.js"] });
+    return; // Exit early for history menu item
+  }
+
   if (!info.selectionText) return;
 
   const key = info.selectionText + "_" + info.menuItemId;
@@ -67,6 +83,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // Store in cache
         chrome.storage.local.set({ [key]: aiResponse });
 
+        // Save to history
+        saveToHistory(info.selectionText, aiResponse);
+
         // Show popup
         chrome.scripting.insertCSS({
           target: { tabId: tab.id },
@@ -82,7 +101,42 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   });
 });
 
+// Function to save AI response to history
+async function saveToHistory(query, response) {
+  chrome.storage.local.get([HISTORY_STORAGE_KEY], (result) => {
+    let history = result[HISTORY_STORAGE_KEY] || [];
+    // Add new entry to the beginning of the array
+    history.unshift({ query: query, response: response, timestamp: Date.now() });
+    // Trim history to max entries
+    if (history.length > MAX_HISTORY_ENTRIES) {
+      history = history.slice(0, MAX_HISTORY_ENTRIES);
+    }
+    chrome.storage.local.set({ [HISTORY_STORAGE_KEY]: history });
+  });
+}
 
+// Listener for messages from content scripts (e.g., history sidebar)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "showAIResponseFromHistory") {
+    if (sender.tab && message.response) {
+      chrome.scripting.insertCSS({ target: { tabId: sender.tab.id }, files: ["content.css"] });
+      chrome.scripting.executeScript({
+        target: { tabId: sender.tab.id },
+        func: showAIResponse,
+        args: [message.response]
+      });
+    }
+  } else if (message.action === "clearAIHistory") {
+    chrome.storage.local.remove(HISTORY_STORAGE_KEY, () => {
+      console.log("AI History cleared.");
+      sendResponse({ success: true }); // Acknowledge clearance
+    });
+    return true; // Indicate that sendResponse will be called asynchronously
+  } else if (message.action === "getAIHistory") {
+    chrome.storage.local.get([HISTORY_STORAGE_KEY], (result) => { sendResponse({ history: result[HISTORY_STORAGE_KEY] || [] }); });
+    return true; // Indicate that sendResponse will be called asynchronously
+  }
+});
 
 // Function to call Gemini API
 async function getGeminiResponse(text) {
