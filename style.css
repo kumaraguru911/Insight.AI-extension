@@ -1,57 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Using a modern, dark theme for a more 'tech' feel */
+:root {
+  --background-start: #0b1120;
+  --background-end: #1f2937;
+  --primary-text: #f9fafb; /* gray-50 */
+  --secondary-text: #9ca3af; /* gray-400 */
+  --accent-start: #3b82f6; /* Electric blue */
+  --accent-end: #60a5fa; /* Cyan */
+  --accent-glow: rgba(59, 130, 246, 0.6);
+  --glass-bg: rgba(29, 42, 68, 0.3);
+  --glass-border: rgba(96, 165, 250, 0.2);
+  --success-color: #4ade80; /* green-400 */
+}
+
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 body {
-  font-family: "Segoe UI", sans-serif;
+  font-family: 'Poppins', "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
-  width: 250px;
-  background: #f8fafc;
-  color: #111;
+  width: 280px; /* Slightly wider for better spacing */
+  /* Cosmic background with a faint nebula effect */
+  background-color: var(--background-start);
+  background-image: radial-gradient(circle at 20% 20%, rgba(96, 165, 250, 0.15) 0%, transparent 40%),
+                    linear-gradient(160deg, var(--background-start) 0%, var(--background-end) 100%);
+  color: var(--primary-text);
+  overflow: hidden;
+  border-radius: 16px; /* Added for rounded popup corners */
 }
 
 #popup-container {
-  padding: 15px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  animation: fade-in-up 0.5s ease-out;
 }
 
-h2 {
-  margin: 0 0 5px 0;
-  font-size: 18px;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+  background-image: url('icons/icon48.png');
+  background-size: 48px 48px; /* Use original image size */
+  /* Adjust background-position to precisely crop the bulb from the icon48.png */
+  /* The bulb is roughly centered horizontally, and its top is around 12px from the top of the 48px image */
+  /* For a 24px high div, -12px vertical offset will align the bulb's top with the div's top */
+  background-position: center -12px;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Subtle glow for the icon */
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  /* Subtle text glow for a futuristic look */
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 .tagline {
-  color: #555;
-  font-size: 12px;
-  margin-bottom: 10px;
+  color: var(--secondary-text);
+  font-size: 13px;
+  margin: -12px 0 4px 0; /* Position it right under the header */
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 16px;
+  width: calc(100% - 32px); /* Full width with padding */
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.1);
 }
 
 .settings {
-  margin: 10px 0;
+  width: 100%;
+}
+
+.settings-header {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--secondary-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+.settings label {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary-text);
 }
 
 select {
   width: 100%;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background-color: rgba(0, 0, 0, 0.3);
+  color: var(--primary-text);
+  outline: none;
+  margin-bottom: 16px;
+  font-size: 14px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 1em;
 }
 
 button {
-  width: 100%;
-  background: #2563eb;
+  width: 100%; /* Take full width of the card */
+  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
   color: white;
-  padding: 8px;
+  padding: 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 8px;
+  position: relative;
+  font-size: 14px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 button:hover {
-  background: #1d4ed8;
+  /* Create a glow effect using box-shadow */
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: scale(0.98) translateY(0);
+  background: linear-gradient(90deg, #2563eb, #3b82f6); /* Slightly darker on click */
+  box-shadow: none;
 }
 
 #statusMsg {
   text-align: center;
   font-size: 12px;
-  color: #22c55e;
+  color: var(--success-color);
+  height: 16px; /* Reserve space to prevent layout shift */
   margin-top: 8px;
+}
+
+.footer {
+  font-size: 10px;
+  color: var(--secondary-text);
+  opacity: 0.7;
+  margin: 16px 0 0 0;
 }
