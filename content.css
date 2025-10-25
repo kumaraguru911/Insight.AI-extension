@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* --- Clarity (Light) Theme Variables --- */
+:root {
+  --clarity-bg: rgba(248, 249, 252, 0.7);
+  --clarity-blur: 18px;
+  --clarity-border: rgba(0, 122, 255, 0.2);
+  --clarity-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  --clarity-text-primary: #2c3e50;
+  --clarity-text-secondary: #7f8c8d;
+  --clarity-accent: #007AFF;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes ai-popup-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Main Popup Box --- */
+#ai-popup-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--clarity-bg);
+  backdrop-filter: blur(var(--clarity-blur));
+  -webkit-backdrop-filter: blur(var(--clarity-blur));
+  color: var(--clarity-text-primary);
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  max-width: 400px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: var(--clarity-shadow);
+  z-index: 2147483647; /* Max z-index */
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  cursor: move;
+  border: 1px solid var(--clarity-border);
+  animation: ai-popup-fade-in 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#ai-popup-box.is-dragging {
+  transition: none !important;
+  animation: none !important;
+  cursor: grabbing;
+}
+
+/* --- Custom Scrollbar --- */
+#ai-popup-box::-webkit-scrollbar {
+  width: 8px;
+}
+#ai-popup-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+#ai-popup-box::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* --- Header Elements --- */
+.ai-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ai-popup-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-size: 44px 44px;
+  background-position: center -11px; /* Crop to show only the brain icon */
+  background-repeat: no-repeat;
+  background-image: url('chrome-extension://__MSG_@@extension_id__/icons/icon48.png');
+}
+
+.ai-popup-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--clarity-text-primary);
+}
+
+.ai-popup-content {
+  /* Ensures long words or strings don't overflow the container */
+  word-wrap: break-word;
+  /* Respects newlines from the AI response and wraps text */
+  white-space: pre-wrap;
+  color: #34495e; /* Slightly different shade for content */
+}
+
+/* --- Close Button --- */
+.ai-popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--clarity-text-secondary);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.ai-popup-close-btn:hover {
+  color: var(--clarity-text-primary);
+  transform: scale(1.1);
+}
+
+/* --- Typing Cursor Effect --- */
+.ai-popup-content::after {
+  content: '▋';
+  animation: ai-popup-blink 1s step-end infinite;
+  margin-left: 2px;
+  color: var(--clarity-accent);
+  font-weight: 600;
+}
+
+@keyframes ai-popup-blink {
+  from, to { opacity: 1 }
+  50% { opacity: 0 }
+}
+
+/* Hide cursor when typing is done */
+.ai-popup-content.typing-done::after {
+  content: '';
+  animation: none;
+  display: none;
+}

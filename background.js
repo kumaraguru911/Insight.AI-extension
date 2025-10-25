@@ -28,11 +28,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   chrome.storage.local.get([key], async (result) => {
     if (result[key]) {
       // Show cached response
+      chrome.scripting.insertCSS({
+        target: { tabId: tab.id },
+        files: ["content.css"]
+      });
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: showAIResponse,
         args: [result[key]]
       });
+
     } else {
       // Prepare prompt
       // Get the saved response mode from storage
@@ -63,6 +68,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         chrome.storage.local.set({ [key]: aiResponse });
 
         // Show popup
+        chrome.scripting.insertCSS({
+          target: { tabId: tab.id },
+          files: ["content.css"]
+        });
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: showAIResponse,
@@ -78,7 +87,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 // Function to call Gemini API
 async function getGeminiResponse(text) {
   // IMPORTANT: Replace with your real API key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY_HERE`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
 
   const payload = {
     contents: [
@@ -131,53 +140,20 @@ function showAIResponse(aiResponse) {
   if (existingBox) existingBox.remove();
 
   const box = document.createElement("div");
-  box.id = "ai-popup-box";
-
-  // Apply futuristic, glassmorphic styling
-  Object.assign(box.style, {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    background: "rgba(29, 42, 68, 0.5)", // Semi-transparent glass background
-    backdropFilter: "blur(16px)",
-    webkitBackdropFilter: "blur(16px)",
-    border: "1px solid rgba(96, 165, 250, 0.3)",
-    color: "#f9fafb",
-    padding: "20px",
-    borderRadius: "16px",
-    fontSize: "15px",
-    maxWidth: "400px",
-    maxHeight: "300px",
-    overflowY: "auto",
-    boxShadow: "0 0 30px rgba(59, 130, 246, 0.2)",
-    zIndex: 999999,
-    fontFamily: "'Poppins', 'Segoe UI', sans-serif",
-    lineHeight: "1.6",
-    cursor: "move",
-    opacity: "0",
-    transform: "translateY(10px)",
-    transition: "opacity 0.4s ease, transform 0.4s ease"
-  });
+  box.id = 'ai-popup-box';
 
   // Header for the popup
   const header = document.createElement('div');
-  Object.assign(header.style, {
-    display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px',
-  });
+  header.className = 'ai-popup-header';
 
   // Use a div for the icon to apply the same professional cropping as the popup
   const icon = document.createElement('div');
-  Object.assign(icon.style, {
-    width: '22px', height: '22px', borderRadius: '50%',
-    backgroundImage: `url(${chrome.runtime.getURL('icons/icon48.png')})`,
-    backgroundSize: '44px 44px',
-    backgroundPosition: 'center -11px', // Crop to show only the bulb
-    backgroundRepeat: 'no-repeat'
-  });
+  icon.className = 'ai-popup-icon';
+  icon.style.backgroundImage = `url(${chrome.runtime.getURL('icons/icon48.png')})`;
 
   const title = document.createElement('span');
   title.textContent = 'Insight.AI';
-  Object.assign(title.style, { fontWeight: '600', fontSize: '16px', textShadow: '0 0 8px rgba(255, 255, 255, 0.3)' });
+  title.className = 'ai-popup-title';
 
   header.appendChild(icon);
   header.appendChild(title);
@@ -185,49 +161,38 @@ function showAIResponse(aiResponse) {
 
   // Content area for typing effect
   const contentArea = document.createElement('div');
+  contentArea.className = 'ai-popup-content';
   box.appendChild(contentArea);
 
   // Close button
   const closeBtn = document.createElement("span");
+  closeBtn.className = 'ai-popup-close-btn';
   closeBtn.innerText = "✖";
-  Object.assign(closeBtn.style, {
-    position: "absolute",
-    top: "6px",
-    right: "12px",
-    cursor: "pointer",
-    fontSize: "16px",
-    color: "#9ca3af",
-    transition: "color 0.2s"
-  });
   closeBtn.onclick = () => box.remove();
-  closeBtn.onmouseover = () => closeBtn.style.color = "#f9fafb";
-  closeBtn.onmouseout = () => closeBtn.style.color = "#9ca3af";
   box.appendChild(closeBtn);
 
   // Add to page and fade in
   document.body.appendChild(box);
-  setTimeout(() => {
-    box.style.opacity = "1";
-    box.style.transform = "translateY(0)";
-  }, 50);
 
   // Typing effect
   let i = 0;
   const speed = 10; // milliseconds per character
-  const formattedResponse = aiResponse.replace(/\n/g, '<br>');
 
   function typeWriter() {
-    if (i < formattedResponse.length) {
+    // The CSS `white-space: pre-wrap` handles newlines, so no need to replace with <br>
+    if (i < aiResponse.length) {
       // Handle HTML tags by finding the next tag and appending the whole thing
-      if (formattedResponse.charAt(i) === '<') {
-        const tagEnd = formattedResponse.indexOf('>', i);
-        contentArea.innerHTML += formattedResponse.substring(i, tagEnd + 1);
+      if (aiResponse.charAt(i) === '<') {
+        const tagEnd = aiResponse.indexOf('>', i);
+        contentArea.innerHTML += aiResponse.substring(i, tagEnd + 1);
         i = tagEnd;
       } else {
-        contentArea.innerHTML += formattedResponse.charAt(i);
+        contentArea.innerHTML += aiResponse.charAt(i);
       }
       i++;
       setTimeout(typeWriter, speed);
+    } else {
+      contentArea.classList.add('typing-done'); // Hide cursor when done
     }
   }
   typeWriter();
@@ -242,20 +207,20 @@ function showAIResponse(aiResponse) {
     isDragging = true;
     offsetX = e.clientX - box.getBoundingClientRect().left;
     offsetY = e.clientY - box.getBoundingClientRect().top;
-    box.style.transition = "none";
+    box.classList.add('is-dragging');
   });
 
   document.addEventListener("mousemove", (e) => {
     if (isDragging) {
+      // We have to set style directly here for drag position
       box.style.left = e.clientX - offsetX + "px";
       box.style.top = e.clientY - offsetY + "px";
       box.style.bottom = "auto";
       box.style.right = "auto";
     }
   });
-
   document.addEventListener("mouseup", () => {
     isDragging = false;
-    box.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    box.classList.remove('is-dragging');
   });
 }
