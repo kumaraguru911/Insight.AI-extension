@@ -42,51 +42,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   // Check if cached
   chrome.storage.local.get([key], async (result) => {
-    if (result[key]) {
-      // Show cached response
-      chrome.scripting.insertCSS({
-        target: { tabId: tab.id },
-        files: ["content.css"]
-      });
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: showAIResponse,
-        args: [result[key]]
-      });
-
-    } else {
-      // Prepare prompt
-      // Get the saved response mode from storage
-      chrome.storage.sync.get({ responseMode: 'concise' }, async (settings) => {
-        const { responseMode } = settings;
-        let promptInstruction = '';
-
-        switch (info.menuItemId) {
-          case "askAI_explain":
-            promptInstruction = `Explain this in a ${responseMode} way:`;
-            break;
-          case "askAI_summarize":
-            promptInstruction = `Summarize this in a ${responseMode} way:`;
-            break;
-          case "askAI_translate":
-            promptInstruction = `Translate this to English:`;
-            break;
-          default:
-            return;
-        }
-
-        const fullPrompt = `${promptInstruction}\n\n"${info.selectionText}"`;
-
-        // Call AI
-        const aiResponse = await getGeminiResponse(fullPrompt);
-
-        // Store in cache
-        chrome.storage.local.set({ [key]: aiResponse });
-
-        // Save to history
-        saveToHistory(info.selectionText, aiResponse);
-
-        // Show popup
+    // Get theme setting to apply the correct style
+    chrome.storage.sync.get({ theme: 'dark' }, (themeSettings) => {
+      if (result[key]) {
+        // Show cached response with the correct theme
         chrome.scripting.insertCSS({
           target: { tabId: tab.id },
           files: ["content.css"]
@@ -94,10 +53,41 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: showAIResponse,
-          args: [aiResponse]
+          args: [result[key], themeSettings.theme]
         });
-      });
-    }
+      } else {
+        // Prepare prompt and get AI response
+        chrome.storage.sync.get({ responseMode: 'concise' }, async (modeSettings) => {
+          const { responseMode } = modeSettings;
+          let promptInstruction = '';
+
+          switch (info.menuItemId) {
+            case "askAI_explain": promptInstruction = `Explain this in a ${responseMode} way:`; break;
+            case "askAI_summarize": promptInstruction = `Summarize this in a ${responseMode} way:`; break;
+            case "askAI_translate": promptInstruction = `Translate this to English:`; break;
+            default: return;
+          }
+
+          const fullPrompt = `${promptInstruction}\n\n"${info.selectionText}"`;
+          const aiResponse = await getGeminiResponse(fullPrompt);
+
+          // Store in cache and history
+          chrome.storage.local.set({ [key]: aiResponse });
+          saveToHistory(info.selectionText, aiResponse);
+
+          // Show popup with the correct theme
+          chrome.scripting.insertCSS({
+            target: { tabId: tab.id },
+            files: ["content.css"]
+          });
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: showAIResponse,
+            args: [aiResponse, themeSettings.theme]
+          });
+        });
+      }
+    });
   });
 });
 
@@ -118,14 +108,16 @@ async function saveToHistory(query, response) {
 // Listener for messages from content scripts (e.g., history sidebar)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "showAIResponseFromHistory") {
-    if (sender.tab && message.response) {
-      chrome.scripting.insertCSS({ target: { tabId: sender.tab.id }, files: ["content.css"] });
-      chrome.scripting.executeScript({
-        target: { tabId: sender.tab.id },
-        func: showAIResponse,
-        args: [message.response]
-      });
-    }
+    chrome.storage.sync.get({ theme: 'dark' }, (settings) => {
+      if (sender.tab && message.response) {
+        chrome.scripting.insertCSS({ target: { tabId: sender.tab.id }, files: ["content.css"] });
+        chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          func: showAIResponse,
+          args: [message.response, settings.theme]
+        });
+      }
+    });
   } else if (message.action === "clearAIHistory") {
     chrome.storage.local.remove(HISTORY_STORAGE_KEY, () => {
       console.log("AI History cleared.");
@@ -135,13 +127,43 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.action === "getAIHistory") {
     chrome.storage.local.get([HISTORY_STORAGE_KEY], (result) => { sendResponse({ history: result[HISTORY_STORAGE_KEY] || [] }); });
     return true; // Indicate that sendResponse will be called asynchronously
+  } else if (message.action === "askAIFromTooltip") {
+    // This handles the request from the new floating tooltip
+    const { selectionText } = message;
+    if (!selectionText) return;
+
+    (async () => {
+      // Get theme setting before showing the popup
+      chrome.storage.sync.get({ theme: 'dark' }, async (settings) => {
+        // For the tooltip, we'll default to a simple "explain" prompt.
+        // You could make this configurable in the future.
+        const promptInstruction = `Explain this in a concise way:`;
+        const fullPrompt = `${promptInstruction}\n\n"${selectionText}"`;
+
+        const aiResponse = await getGeminiResponse(fullPrompt);
+
+        // Save to history
+        saveToHistory(selectionText, aiResponse);
+
+        // Show the response popup on the active tab
+        chrome.scripting.insertCSS({
+          target: { tabId: sender.tab.id },
+          files: ["content.css"]
+        });
+        chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          func: showAIResponse,
+          args: [aiResponse, settings.theme]
+        });
+      });
+    })();
   }
 });
 
 // Function to call Gemini API
 async function getGeminiResponse(text) {
   // IMPORTANT: Replace with your real API key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
 
   const payload = {
     contents: [
@@ -189,12 +211,15 @@ async function getGeminiResponse(text) {
 
 
 
-function showAIResponse(aiResponse) {
+function showAIResponse(aiResponse, theme) {
   const existingBox = document.getElementById("ai-popup-box");
   if (existingBox) existingBox.remove();
 
   const box = document.createElement("div");
   box.id = 'ai-popup-box';
+
+  // Apply the theme class passed from the background script
+  box.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
 
   // Header for the popup
   const header = document.createElement('div');

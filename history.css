@@ -14,6 +14,18 @@
   --clarity-delete-btn-hover: #c0392b;
 }
 
+/* --- Dark Theme Variables --- */
+.theme-dark {
+  --clarity-bg: rgba(29, 42, 68, 0.85);
+  --clarity-border: rgba(96, 165, 250, 0.2);
+  --clarity-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --clarity-text-primary: #f9fafb;
+  --clarity-text-secondary: #9CA3AF;
+  --clarity-hover-bg: rgba(59, 130, 246, 0.1);
+  --clarity-delete-btn: #ef4444;
+  --clarity-delete-btn-hover: #dc2626;
+}
+
 @keyframes history-sidebar-fade-in {
   from {
     opacity: 0;
@@ -100,11 +112,19 @@
   background-clip: content-box;
 }
 
+.theme-dark .ai-history-list::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
 .ai-history-item {
   padding: 12px 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: background-color 0.2s;
+}
+
+.theme-dark .ai-history-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ai-history-item:active {
@@ -141,6 +161,10 @@
   font-size: 11px;
   color: #b0bec5; /* A lighter, less prominent color */
   flex-shrink: 0; /* Prevent timestamp from shrinking */
+}
+
+.theme-dark .ai-history-timestamp {
+  color: #6b7280;
 }
 
 .ai-history-response {

@@ -15,6 +15,14 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["tooltip_content_script.js"],
+      "css": ["tooltip.css"],
+      "run_at": "document_idle"
+    }
+  ],
   "host_permissions": [
     "<all_urls>"
   ],
@@ -24,7 +32,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["history.css", "history_content_script.js", "icons/icon48.png"],
+      "resources": ["history.css", "history_content_script.js", "icons/icon48.png", "tooltip.css"],
       "matches": ["<all_urls>"]
     }
   ]

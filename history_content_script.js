@@ -11,6 +11,12 @@
   const sidebar = document.createElement('div');
   sidebar.id = 'ai-history-sidebar';
 
+  // Fetch and apply the theme from storage
+  chrome.storage.sync.get({ theme: 'dark' }, (settings) => {
+    sidebar.classList.add(settings.theme === 'dark' ? 'theme-dark' : 'theme-light');
+  });
+
+
   const header = document.createElement('div');
   header.className = 'ai-history-header';
   header.innerHTML = `

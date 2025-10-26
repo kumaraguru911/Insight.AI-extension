@@ -11,6 +11,17 @@
   --clarity-accent: #007AFF;
 }
 
+/* --- Dark Theme Variables --- */
+.theme-dark {
+  --clarity-bg: rgba(29, 42, 68, 0.7);
+  --clarity-border: rgba(96, 165, 250, 0.2);
+  --clarity-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --clarity-text-primary: #f9fafb;
+  --clarity-text-secondary: #9CA3AF;
+  --clarity-accent: #3b82f6;
+}
+
+
 /* --- Keyframe Animations --- */
 @keyframes ai-popup-fade-in {
   from {
@@ -97,6 +108,10 @@
   /* Respects newlines from the AI response and wraps text */
   white-space: pre-wrap;
   color: #34495e; /* Slightly different shade for content */
+}
+
+.theme-dark .ai-popup-content {
+  color: #d1d5db; /* Lighter gray for dark mode content */
 }
 
 /* --- Close Button --- */
