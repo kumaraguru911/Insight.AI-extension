@@ -5,6 +5,14 @@
 **InsightAI** is a powerful Chrome extension that solves the problem of encountering complex or confusing text online. Instead of switching tabs to search for definitions, this tool helps you get instant understanding directly on the page. Using the **Google Gemini API**, you can select any text to receive a concise, AI-generated explanation, summary, or translation, integrating a smart assistant seamlessly into your browsing workflow.
 ---
 
+## 🎥 Live Demo
+
+Check out the working demo of Insight.AI on YouTube! Click the thumbnail below to watch.
+
+[![Insight.AI Demo on YouTube](https://img.youtube.com/vi/aBz0Iydrf1A/maxresdefault.jpg)](https://youtu.be/aBz0Iydrf1A)
+
+---
+
 ## ✨ Features
 
 *   **Context-Aware Actions**: Right-click on selected text to:
