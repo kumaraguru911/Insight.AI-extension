@@ -68,6 +68,7 @@ Follow these steps to install and run the extension locally.
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
         ```
     *   Replace `YOUR_API_KEY` with your actual Gemini API key.
+    *   **Note**: This is the most important step for the extension to work.
 
 3.  **Load the Extension in Chrome:**
     *   Open Chrome and navigate to `chrome://extensions`.
@@ -116,6 +117,6 @@ The Insight.AI icon should now appear in your Chrome toolbar!
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE.md file for details.
 
 ---
