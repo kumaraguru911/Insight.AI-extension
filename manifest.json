@@ -24,7 +24,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["history.css"],
+      "resources": ["history.css", "history_content_script.js", "icons/icon48.png"],
       "matches": ["<all_urls>"]
     }
   ]

@@ -141,7 +141,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Function to call Gemini API
 async function getGeminiResponse(text) {
   // IMPORTANT: Replace with your real API key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0`;
 
   const payload = {
     contents: [
@@ -230,7 +230,6 @@ function showAIResponse(aiResponse) {
 
   // Typing effect
   let i = 0;
-  const speed = 10; // milliseconds per character
 
   function typeWriter() {
     // The CSS `white-space: pre-wrap` handles newlines, so no need to replace with <br>
@@ -244,6 +243,8 @@ function showAIResponse(aiResponse) {
         contentArea.innerHTML += aiResponse.charAt(i);
       }
       i++;
+      // Use a randomized speed for a more natural typing feel
+      const speed = Math.random() * (30 - 5) + 5; // Random delay between 5ms and 30ms
       setTimeout(typeWriter, speed);
     } else {
       contentArea.classList.add('typing-done'); // Hide cursor when done

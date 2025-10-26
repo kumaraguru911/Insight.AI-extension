@@ -90,6 +90,30 @@
     renderHistory(response.history);
   }
 
+  function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const secondsPast = (now.getTime() - timestamp) / 1000;
+
+    if (secondsPast < 60) {
+      return `${Math.round(secondsPast)}s ago`;
+    }
+    if (secondsPast < 3600) {
+      return `${Math.round(secondsPast / 60)}m ago`;
+    }
+    if (secondsPast <= 86400) {
+      return `${Math.round(secondsPast / 3600)}h ago`;
+    }
+    // For days, you might want a more robust date formatting library,
+    // but this is good for recent history.
+    const daysPast = Math.round(secondsPast / 86400);
+    if (daysPast <= 7) {
+      return `${daysPast}d ago`;
+    }
+
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
   function renderHistory(history) {
     historyList.innerHTML = ''; // Clear existing entries
     if (history.length === 0) {
@@ -97,19 +121,33 @@
       return;
     }
 
+    // Create a document fragment for performance
+    const fragment = document.createDocumentFragment();
+
     history.forEach(entry => {
       const item = document.createElement('div');
       item.className = 'ai-history-item';
+
+      // Sanitize text content to prevent XSS from previous queries/responses
+      const queryText = entry.query || '';
+      const responseText = entry.response || '';
+      const timeAgo = formatTimeAgo(entry.timestamp);
+
       item.innerHTML = `
-        <div class="ai-history-query">${entry.query}</div>
-        <div class="ai-history-response">${entry.response}</div>
+        <div class="ai-history-item-header">
+            <div class="ai-history-query" title="${queryText}">${queryText}</div>
+            <div class="ai-history-timestamp">${timeAgo}</div>
+        </div>
+        <div class="ai-history-response" title="${responseText}">${responseText}</div>
       `;
       item.addEventListener('click', () => {
         // Send message to background script to show the AI response popup
         chrome.runtime.sendMessage({ action: "showAIResponseFromHistory", response: entry.response });
       });
-      historyList.appendChild(item);
+      fragment.appendChild(item);
     });
+
+    historyList.appendChild(fragment);
   }
 
   // Initial fetch and render

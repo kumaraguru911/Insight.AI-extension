@@ -107,6 +107,11 @@
   transition: background-color 0.2s;
 }
 
+.ai-history-item:active {
+  transform: scale(0.98);
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
 .ai-history-item:hover {
   background-color: var(--clarity-hover-bg);
 }
@@ -115,13 +120,27 @@
   border-bottom: none;
 }
 
+.ai-history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
 .ai-history-query {
   font-size: 13px;
   color: var(--clarity-text-secondary);
-  margin-bottom: 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-grow: 1; /* Allow query to take up space */
+}
+
+.ai-history-timestamp {
+  font-size: 11px;
+  color: #b0bec5; /* A lighter, less prominent color */
+  flex-shrink: 0; /* Prevent timestamp from shrinking */
 }
 
 .ai-history-response {
