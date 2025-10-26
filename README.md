@@ -1,9 +1,8 @@
-# Insight.AI - Your In-Browser AI Assistant
+# InsightAI — Smart AI Assistant for Instant Explanations
 
 ![Insight.AI Icon](icons/icon48.png)
 
-**Insight.AI** is a powerful Chrome extension that integrates Google's Gemini AI directly into your browsing experience. Select any text on a webpage to instantly explain, summarize, or translate it. All your interactions are saved in a convenient history sidebar, and the extension's look and feel can be customized to your liking.
-
+**InsightAI** is a powerful Chrome extension that solves the problem of encountering complex or confusing text online. Instead of switching tabs to search for definitions, this tool helps you get instant understanding directly on the page. Using the **Google Gemini API**, you can select any text to receive a concise, AI-generated explanation, summary, or translation, integrating a smart assistant seamlessly into your browsing workflow.
 ---
 
 ## ✨ Features
@@ -27,6 +26,24 @@
 
 ---
 
+## 🛠️ Tech Stack
+
+*   **Core Logic**: JavaScript (ES6+)
+*   **Platform**: Chrome Extension APIs (Manifest V3)
+*   **AI Provider**: Google Gemini API (`generativelanguage.googleapis.com`)
+*   **Styling**: HTML5 & CSS3
+
+---
+## 🧠 Core API Capabilities
+
+This project leverages the versatile **Google Gemini API** to perform several key tasks by sending different prompts for each feature:
+
+*   **📄 Summarizer API**: Distills complex information into clear insights when you use the "Summarize" feature.
+*   **🌐 Translator API**: Adds multilingual capabilities by translating selected text into your preferred language (English by default).
+*   **✏️ Writer API**: Creates original and engaging text to provide detailed or simple explanations for selected concepts.
+
+---
+
 ## 🚀 Getting Started
 
 Follow these steps to install and run the extension locally.
@@ -40,7 +57,7 @@ Follow these steps to install and run the extension locally.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/kumaraguru911/insight-ai-extension.git
+    git clone https://github.com/your-username/insight-ai-extension.git
     cd insight-ai-extension
     ```
 
@@ -62,7 +79,7 @@ The Insight.AI icon should now appear in your Chrome toolbar!
 
 ---
 
-## usage How to Use
+## 💡 How to Use
 
 1.  **Using the Context Menu**:
     *   Highlight any text on a webpage.
@@ -85,7 +102,7 @@ The Insight.AI icon should now appear in your Chrome toolbar!
 
 ---
 
-## 🛠️ Project Structure
+## 📂 Project Structure
 
 *   `background.js`: The service worker. Handles API calls, context menu logic, and message passing.
 *   `popup.html` / `popup.js` / `style.css`: Files for the extension's main settings popup.
