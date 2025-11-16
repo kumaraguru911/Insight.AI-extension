@@ -238,6 +238,39 @@ button:active {
   transition: opacity 0.3s ease;
 }
 
+/* Extraction Section */
+.extraction-section {
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  text-align: center;
+}
+
+.extraction-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.extraction-btn:hover {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+.extraction-desc {
+  font-size: 11px;
+  color: var(--secondary-text);
+  margin: 0;
+}
+
 .footer {
   padding: 10px 20px;
   text-align: center;

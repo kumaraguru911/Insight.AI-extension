@@ -2,16 +2,53 @@
 
 ![Insight.AI Icon](icons/icon48.png)
 
+**Release:** Version 2.0 — Updated 2025-11-16
+
 **InsightAI** is a powerful Chrome extension that solves the problem of encountering complex or confusing text online. Instead of switching tabs to search for definitions, this tool helps you get instant understanding directly on the page. Using the **Google Gemini API**, you can select any text to receive a concise, AI-generated explanation, summary, or translation, integrating a smart assistant seamlessly into your browsing workflow.
 ---
 
-## 🎥 Live Demo
+## 🎥 Live Demo :
 
-Check out the working demo of Insight.AI on YouTube! Click the thumbnail below to watch.
+You can link a working demo video here so users can see Insight.AI in action. Replace the placeholder ID below with your demo video's YouTube ID.
 
-[![Insight.AI Demo on YouTube](https://img.youtube.com/vi/aBz0Iydrf1A/maxresdefault.jpg)](https://youtu.be/aBz0Iydrf1A)
+Demo placeholder (replace with your video):
+
+`DEMO_YOUTUBE_ID = LPZh9BOjkQs`
+
+```markdown
+[![Insight.AI Demo on YouTube](https://img.youtube.com/vi/DEMO_YOUTUBE_ID/maxresdefault.jpg)](https://youtu.be/DEMO_YOUTUBE_ID)
+```
+
+For quick testing, you can use the following demo URL placeholder:
+
+https://www.youtube.com/watch?v=LPZh9BOjkQs
 
 ---
+
+## 📝 Recent Changes & How To Test (Summary)
+
+This project recently added a focused "Extract & Summarize" feature and several reliability and UX improvements. Use this section to quickly understand what changed and how to validate the YouTube + PDF extraction flows.
+
+- New extraction UI and logic: `extraction.html`, `extraction.js`, `extraction-ui.js`, `extraction.css` — these files provide a dedicated interface for PDF and YouTube transcript extraction and summarization.
+- Local PDF extractor: `pdf-lib.js` was added to extract text locally (no CDN). It uses a two-tier approach (primary extraction + binary/stream fallback) to handle a variety of PDF encodings.
+- YouTube transcript extraction: The extension first attempts the public `timedtext` endpoint. If that fails because of CORS or missing captions, it now uses a page-context fallback (opens the video page in a background tab and runs a small script via `chrome.scripting.executeScript`) and will try to scrape visible captions from the player DOM or the transcript drawer as a last resort.
+- Improved error messaging and user guidance: When auto-extraction fails, the UI clearly explains the limitation and provides a manual fallback (copy transcript from YouTube's "Show transcript" and paste it into the Transcript tab).
+- Manifest & security: The manifest was updated to support local PDF processing and required permissions for executing page-context scripts (`scripting`, `tabs`, and `host_permissions` are in use). The extension uses local resources only.
+- Troubleshooting guide: A dedicated guide `YOUTUBE_PDF_GUIDE.md` was added that explains common failure modes and step-by-step workarounds for YouTube and PDF extraction issues.
+
+Quick test steps (YouTube)
+- Reload the extension at `chrome://extensions/` (click **Reload**).
+- Open the Extract tool in the extension and paste this demo URL: `https://www.youtube.com/watch?v=LPZh9BOjkQs`.
+- Click **Extract**. The extension may open a temporary background tab (it will close automatically) while fetching captions — this is intentional for the page-context fallback.
+- If auto-extract still fails, open the YouTube video, click **Show transcript**, copy all text, then paste into the extension's **Transcript** tab and click **Summarize**.
+
+Quick test steps (PDF)
+- Use the PDF tab and upload a text-based PDF (selectable text). The extractor uses `pdf-lib.js` with a fallback for encoded PDFs.
+- If the PDF is a scanned image (no selectable text), the extractor will not work — use OCR tools first or copy/paste text into the Transcript tab.
+
+Where to look for logs
+- Open the extension popup or extraction UI and inspect it (right-click → Inspect) to view the Console for error messages and progress logs (helpful when debugging specific videos).
+
 
 ## ✨ Features
 

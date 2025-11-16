@@ -26,6 +26,13 @@ chrome.contextMenus.create({
     title: "Show AI History",
     contexts: ["all"] // Can be clicked anywhere
   });
+
+  // New context menu item for extraction
+  chrome.contextMenus.create({
+    id: "openExtraction",
+    title: "Extract & Summarize",
+    contexts: ["all"]
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -34,6 +41,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ["history.css"] });
     chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["history_content_script.js"] });
     return; // Exit early for history menu item
+  }
+
+  if (info.menuItemId === "openExtraction") {
+    // Open extraction tool in new tab
+    chrome.tabs.create({ url: chrome.runtime.getURL('extraction.html') });
+    return; // Exit early for extraction menu item
   }
 
   if (!info.selectionText) return;
@@ -163,7 +176,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Function to call Gemini API
 async function getGeminiResponse(text) {
   // IMPORTANT: Replace with your real API key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0`;
 
   const payload = {
     contents: [

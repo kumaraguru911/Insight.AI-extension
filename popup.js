@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.getElementById("themeToggle");
   const saveBtn = document.getElementById("saveBtn");
   const statusMsg = document.getElementById("statusMsg");
+  const openExtractionBtn = document.getElementById("openExtractionBtn");
 
   // Load saved settings when popup opens
   chrome.storage.sync.get(["responseMode", "theme"], (data) => {
@@ -27,5 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
       statusMsg.textContent = "✅ Settings saved!";
       setTimeout(() => (statusMsg.textContent = ""), 1500);
     });
+  });
+
+  // Open extraction tool
+  openExtractionBtn.addEventListener("click", () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('extraction.html') });
   });
 });

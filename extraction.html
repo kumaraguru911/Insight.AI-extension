@@ -1,0 +1,92 @@
+<!-- extraction.html - PDF and YouTube Extraction UI -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extract & Summarize</title>
+  <link rel="stylesheet" href="extraction.css">
+</head>
+<body>
+  <div class="extraction-container">
+    <div class="extraction-header">
+      <h1>Extract & Summarize</h1>
+      <p>PDFs • YouTube Videos • Transcripts</p>
+    </div>
+
+    <div class="extraction-tabs">
+      <button class="tab-btn active" data-tab="pdf">
+        <span class="tab-icon">📄</span> PDF
+      </button>
+      <button class="tab-btn" data-tab="youtube">
+        <span class="tab-icon">🎥</span> YouTube
+      </button>
+      <button class="tab-btn" data-tab="transcript">
+        <span class="tab-icon">📝</span> Transcript
+      </button>
+    </div>
+
+    <!-- PDF Tab -->
+    <div class="tab-content active" id="pdf-tab">
+      <div class="upload-area" id="pdfUploadArea">
+        <div class="upload-icon">📄</div>
+        <h3>Upload PDF</h3>
+        <p>Drag and drop your PDF or click to select</p>
+        <input type="file" id="pdfInput" accept=".pdf" hidden>
+      </div>
+      <div id="pdfStatus" class="status-message"></div>
+    </div>
+
+    <!-- YouTube Tab -->
+    <div class="tab-content" id="youtube-tab">
+      <div class="input-group">
+        <label for="youtubeUrl">YouTube URL</label>
+        <input 
+          type="url" 
+          id="youtubeUrl" 
+          placeholder="https://www.youtube.com/watch?v=..."
+          class="input-field"
+        >
+        <button id="youtubeExtractBtn" class="action-btn">Extract & Summarize</button>
+      </div>
+      <div id="youtubeStatus" class="status-message"></div>
+    </div>
+
+    <!-- Transcript Tab -->
+    <div class="tab-content" id="transcript-tab">
+      <div class="input-group">
+        <label for="transcriptText">Paste Transcript or Text</label>
+        <textarea 
+          id="transcriptText" 
+          placeholder="Paste your transcript, article, or any text here..."
+          class="textarea-field"
+          rows="8"
+        ></textarea>
+        <button id="transcriptExtractBtn" class="action-btn">Summarize</button>
+      </div>
+      <div id="transcriptStatus" class="status-message"></div>
+    </div>
+
+    <!-- Results Display -->
+    <div id="resultsContainer" class="results-container hidden">
+      <div class="results-header">
+        <h2>Summary Results</h2>
+        <button id="closeResultsBtn" class="close-btn">✕</button>
+      </div>
+      <div class="results-content" id="resultsContent"></div>
+      <div class="results-footer">
+        <button id="copyResultsBtn" class="footer-btn">📋 Copy</button>
+        <button id="downloadResultsBtn" class="footer-btn">💾 Download</button>
+      </div>
+    </div>
+
+    <div class="settings-link">
+      <a href="#" id="settingsLink">⚙️ Settings</a>
+    </div>
+  </div>
+
+  <script src="pdf-lib.js"></script>
+  <script src="extraction.js"></script>
+  <script src="extraction-ui.js"></script>
+</body>
+</html>

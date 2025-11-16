@@ -32,8 +32,17 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["history.css", "history_content_script.js", "icons/icon48.png", "tooltip.css"],
+      "resources": ["history.css", "history_content_script.js", "icons/icon48.png", "tooltip.css", "extraction.css", "pdf-lib.js"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "commands": {
+    "open-extraction": {
+      "suggested_key": "Ctrl+Shift+E",
+      "description": "Open Extract & Summarize Tool"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; style-src 'self' 'unsafe-inline';"
+  }
 }
