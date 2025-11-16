@@ -9,18 +9,6 @@
 
 ## 🎥 Live Demo :
 
-You can link a working demo video here so users can see Insight.AI in action. Replace the placeholder ID below with your demo video's YouTube ID.
-
-Demo video (project demo):
-
-`DEMO_YOUTUBE_ID = w3PEESrPMeY`
-
-```markdown
-[![Insight.AI Demo on YouTube](https://img.youtube.com/vi/w3PEESrPMeY/maxresdefault.jpg)](https://youtu.be/w3PEESrPMeY)
-```
-
-For quick testing, you can use the demo URL:
-
 https://www.youtube.com/watch?v=w3PEESrPMeY
 
 ---
