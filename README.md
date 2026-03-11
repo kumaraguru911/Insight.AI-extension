@@ -147,7 +147,6 @@ The Insight.AI icon should now appear in your Chrome toolbar!
 *   `icons/`: Contains all the necessary icons for the extension.
 
 ---
-
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
