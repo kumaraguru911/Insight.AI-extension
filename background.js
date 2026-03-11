@@ -218,7 +218,7 @@ async function getGeminiResponse(text) {
     return data.candidates[0]?.content?.parts?.[0]?.text || "⚠️ No response text found.";
   } catch (err) {
     console.error("Gemini API Error:", err);
-    return "⚠️ Network error. Could not connect to Gemini API.";
+    return "⚠️ Unable to generate AI response. Please check your API key, internet connection, or API quota.";
   }
 }
 
