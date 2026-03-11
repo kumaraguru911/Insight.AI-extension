@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Insight.AI - Smart Research Companion",
   "version": "1.0",
-  "description": "Summarize, explain, and translate selected text instantly using Gemini APIs.",
+  "description": "InsightAI Chrome Extension - AI explanations, summaries and translations using Gemini API",
   "icons": {
     "48": "icons/icon48.png"
   },

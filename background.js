@@ -4,7 +4,7 @@ const MAX_HISTORY_ENTRIES = 50; // Limit history to prevent excessive storage
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "askAI_explain",
-    title: "AI: Explain selected text",
+    title: "InsightAI: Explain selected text",
     contexts: ["selection"]
   });
 
