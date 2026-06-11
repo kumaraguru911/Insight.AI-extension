@@ -285,7 +285,7 @@ function initializeSettings() {
   const settingsLink = document.getElementById('settingsLink');
   settingsLink.addEventListener('click', (e) => {
     e.preventDefault();
-    chrome.runtime.openOptionsPage?.() || chrome.tabs.create({ url: 'popup.html' });
+    chrome.runtime.openOptionsPage?.() || chrome.tabs.create({ url: chrome.runtime.getURL('src/popup/popup.html') });
   });
 }
 
@@ -548,8 +548,10 @@ ${transcript}`;
 }
 
 async function callGeminiAPI(prompt) {
-  // Use the same API key as background.js
-  const apiKey = 'AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0';
+  const apiKey = await getEnv('GEMINI_API_KEY');
+  if (!apiKey) {
+    throw new Error('Gemini API key is missing. Please add GEMINI_API_KEY to the .env file.');
+  }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=${apiKey}`;
 
   const payload = {

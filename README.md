@@ -17,8 +17,8 @@ https://www.youtube.com/watch?v=w3PEESrPMeY
 
 This project recently added a focused "Extract & Summarize" feature and several reliability and UX improvements. Use this section to quickly understand what changed and how to validate the YouTube + PDF extraction flows.
 
-- New extraction UI and logic: `extraction.html`, `extraction.js`, `extraction-ui.js`, `extraction.css` — these files provide a dedicated interface for PDF and YouTube transcript extraction and summarization.
-- Local PDF extractor: `pdf-lib.js` was added to extract text locally (no CDN). It uses a two-tier approach (primary extraction + binary/stream fallback) to handle a variety of PDF encodings.
+- New extraction UI and logic: `src/extraction/extraction.html`, `src/extraction/extraction.js`, `src/extraction/extraction-ui.js`, `src/extraction/extraction.css` — these files provide a dedicated interface for PDF and YouTube transcript extraction and summarization.
+- Local PDF extractor: `src/extraction/pdf-lib.js` was added to extract text locally (no CDN). It uses a two-tier approach (primary extraction + binary/stream fallback) to handle a variety of PDF encodings.
 - YouTube transcript extraction: The extension first attempts the public `timedtext` endpoint. If that fails because of CORS or missing captions, it now uses a page-context fallback (opens the video page in a background tab and runs a small script via `chrome.scripting.executeScript`) and will try to scrape visible captions from the player DOM or the transcript drawer as a last resort.
 - Improved error messaging and user guidance: When auto-extraction fails, the UI clearly explains the limitation and provides a manual fallback (copy transcript from YouTube's "Show transcript" and paste it into the Transcript tab).
 - Manifest & security: The manifest was updated to support local PDF processing and required permissions for executing page-context scripts (`scripting`, `tabs`, and `host_permissions` are in use). The extension uses local resources only.
@@ -95,13 +95,12 @@ Follow these steps to install and run the extension locally.
     ```
 
 2.  **Add Your API Key:**
-    *   Open the `background.js` file.
-    *   Find the line:
-        ```javascript
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=YOUR_API_KEY`;
+    *   Copy `.env.example` to `.env`.
+    *   Open the new `.env` file and set your Gemini API key:
+        ```text
+        GEMINI_API_KEY=YOUR_REAL_GEMINI_API_KEY_HERE
         ```
-    *   Replace `YOUR_API_KEY` with your actual Gemini API key.
-    *   **Note**: This is the most important step for the extension to work.
+    *   **Note**: `.env` is ignored by Git, so your key stays private.
 
 3.  **Load the Extension in Chrome:**
     *   Open Chrome and navigate to `chrome://extensions`.
@@ -138,11 +137,12 @@ The Insight.AI icon should now appear in your Chrome toolbar!
 
 ## 📂 Project Structure
 
-*   `background.js`: The service worker. Handles API calls, context menu logic, and message passing.
-*   `popup.html` / `popup.js` / `style.css`: Files for the extension's main settings popup.
-*   `content.css`: Styles for the on-page AI response pop-up.
-*   `history_content_script.js` / `history.css`: The logic and styling for the history sidebar injected into pages.
-*   `tooltip_content_script.js`: Manages the appearance and functionality of the floating tooltip on text selection.
+*   `src/background.js`: The service worker. Handles API calls, context menu logic, and message passing.
+*   `src/popup/popup.html` / `src/popup/popup.js` / `src/popup/style.css`: Files for the extension's main settings popup.
+*   `src/styles/content.css`: Styles for the on-page AI response pop-up.
+*   `src/content/history_content_script.js` / `src/styles/history.css`: The logic and styling for the history sidebar injected into pages.
+*   `src/content/tooltip_content_script.js`: Manages the appearance and functionality of the floating tooltip on text selection.
+*   `src/extraction/extraction.html` / `src/extraction/extraction.js` / `src/extraction/extraction-ui.js` / `src/extraction/extraction.css` / `src/extraction/pdf-lib.js`: Files for the Extract & Summarize tool.
 *   `manifest.json`: The core configuration file for the Chrome extension.
 *   `icons/`: Contains all the necessary icons for the extension.
 

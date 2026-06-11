@@ -32,6 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open extraction tool
   openExtractionBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: chrome.runtime.getURL('extraction.html') });
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/extraction/extraction.html') });
   });
 });

@@ -13,13 +13,13 @@
     "storage"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["tooltip_content_script.js"],
-      "css": ["tooltip.css"],
+      "js": ["src/content/tooltip_content_script.js"],
+      "css": ["src/styles/tooltip.css"],
       "run_at": "document_idle"
     }
   ],
@@ -27,12 +27,19 @@
     "<all_urls>"
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_title": "Insight.AI"
   },
   "web_accessible_resources": [
     {
-      "resources": ["history.css", "history_content_script.js", "icons/icon48.png", "tooltip.css", "extraction.css", "pdf-lib.js"],
+      "resources": [
+        "src/styles/history.css",
+        "src/content/history_content_script.js",
+        "icons/icon48.png",
+        "src/styles/tooltip.css",
+        "src/extraction/extraction.css",
+        "src/extraction/pdf-lib.js"
+      ],
       "matches": ["<all_urls>"]
     }
   ],

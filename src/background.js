@@ -1,6 +1,8 @@
 const HISTORY_STORAGE_KEY = 'aiResponseHistory'; // Define a constant for the history storage key
 const MAX_HISTORY_ENTRIES = 50; // Limit history to prevent excessive storage
 
+importScripts('env.js');
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "askAI_explain",
@@ -38,14 +40,14 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "showAIHistory") {
     // Inject history sidebar
-    chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ["history.css"] });
-    chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["history_content_script.js"] });
+    chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ["src/styles/history.css"] });
+    chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["src/content/history_content_script.js"] });
     return; // Exit early for history menu item
   }
 
   if (info.menuItemId === "openExtraction") {
     // Open extraction tool in new tab
-    chrome.tabs.create({ url: chrome.runtime.getURL('extraction.html') });
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/extraction/extraction.html') });
     return; // Exit early for extraction menu item
   }
 
@@ -61,7 +63,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // Show cached response with the correct theme
         chrome.scripting.insertCSS({
           target: { tabId: tab.id },
-          files: ["content.css"]
+          files: ["src/styles/content.css"]
         });
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
@@ -91,7 +93,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
           // Show popup with the correct theme
           chrome.scripting.insertCSS({
             target: { tabId: tab.id },
-            files: ["content.css"]
+            files: ["src/styles/content.css"]
           });
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
@@ -123,7 +125,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "showAIResponseFromHistory") {
     chrome.storage.sync.get({ theme: 'dark' }, (settings) => {
       if (sender.tab && message.response) {
-        chrome.scripting.insertCSS({ target: { tabId: sender.tab.id }, files: ["content.css"] });
+        chrome.scripting.insertCSS({ target: { tabId: sender.tab.id }, files: ["src/styles/content.css"] });
         chrome.scripting.executeScript({
           target: { tabId: sender.tab.id },
           func: showAIResponse,
@@ -161,7 +163,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Show the response popup on the active tab
         chrome.scripting.insertCSS({
           target: { tabId: sender.tab.id },
-          files: ["content.css"]
+          files: ["src/styles/content.css"]
         });
         chrome.scripting.executeScript({
           target: { tabId: sender.tab.id },
@@ -176,7 +178,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Function to call Gemini API
 async function getGeminiResponse(text) {
   // IMPORTANT: Replace with your real API key
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0`;
+  const apiKey = await getEnv('GEMINI_API_KEY');
+  if (!apiKey) {
+    console.error('Gemini API key missing. Please add GEMINI_API_KEY to the .env file.');
+    return '⚠️ Gemini API key is missing. Please add GEMINI_API_KEY to the .env file.';
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent?key=${apiKey}`;
 
   const payload = {
     contents: [

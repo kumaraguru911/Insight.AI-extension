@@ -1,8 +1,6 @@
 // extraction.js - Utility functions for PDF and YouTube extraction
 // Main functionality is in extraction-ui.js
 
-const GEMINI_API_KEY = 'AIzaSyDkDH_sjEFhrNmbLe8TnNEj_9zbEJR_kq0';
-
 // Extract YouTube transcript
 // NOTE: Direct YouTube API has CORS restrictions from extensions
 // Recommended: Users should manually copy transcript from YouTube
