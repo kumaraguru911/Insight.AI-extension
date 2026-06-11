@@ -21,17 +21,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedMode = modeSelect.value;
     const selectedTheme = themeToggle.checked ? "dark" : "light";
 
-    chrome.storage.sync.set({
-      responseMode: selectedMode,
-      theme: selectedTheme
-    }, () => {
-      statusMsg.textContent = "✅ Settings saved!";
-      setTimeout(() => (statusMsg.textContent = ""), 1500);
-    });
+    chrome.storage.sync.set(
+      {
+        responseMode: selectedMode,
+        theme: selectedTheme,
+      },
+      () => {
+        statusMsg.textContent = "✅ Settings saved!";
+        setTimeout(() => (statusMsg.textContent = ""), 1500);
+      },
+    );
   });
 
   // Open extraction tool
   openExtractionBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: chrome.runtime.getURL('src/extraction/extraction.html') });
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("src/extraction/extraction.html"),
+    });
   });
 });

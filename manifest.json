@@ -6,12 +6,7 @@
   "icons": {
     "48": "icons/icon48.png"
   },
-  "permissions": [
-    "contextMenus",
-    "activeTab",
-    "scripting",
-    "storage"
-  ],
+  "permissions": ["contextMenus", "activeTab", "scripting", "storage"],
   "background": {
     "service_worker": "src/background.js"
   },
@@ -23,9 +18,7 @@
       "run_at": "document_idle"
     }
   ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "src/popup/popup.html",
     "default_title": "Insight.AI"

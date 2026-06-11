@@ -1,18 +1,21 @@
-const ENV_FILE = '.env';
+const ENV_FILE = ".env";
 const ENV = { __loaded: false };
 
 function parseEnv(text) {
   const config = {};
   text.split(/\r?\n/).forEach((line) => {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) return;
-    const equalsIndex = trimmed.indexOf('=');
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const equalsIndex = trimmed.indexOf("=");
     if (equalsIndex === -1) return;
 
     const key = trimmed.slice(0, equalsIndex).trim();
     let value = trimmed.slice(equalsIndex + 1).trim();
 
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
       value = value.slice(1, -1);
     }
 
